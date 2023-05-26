@@ -6,6 +6,8 @@ class EvalInterpreter:
         "-": lambda args: args[0] - args[1],
         "*": lambda args: args[0] * args[1],
         "/": lambda args: args[0] / args[1],
+        
+        "assign": lambda args: p[0] == p[1],
     }
 
     @staticmethod
@@ -14,6 +16,7 @@ class EvalInterpreter:
 
     @staticmethod
     def _evaluate(ast):
+        print(ast)
         if type(ast) in (bool, float):
             return ast
         if type(ast) is dict:

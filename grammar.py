@@ -42,6 +42,12 @@ class Grammar:
             "operator": "escrever",
             "args": p[2]
         }
+    def p_command2(self, p):
+        """ command : VAR var assign args """
+        p[0] = {
+                "operator" : "assign",
+                "args" : [p[2], p[4]]
+        }    
 
     def p_args(self, p):
         """ args : args ',' arg"""
@@ -50,6 +56,10 @@ class Grammar:
     def p_args2(self, p):
         """ args : arg"""
         p[0] = [p[1]]
+        
+    def p_arg_var(self, p):
+        """ arg : var """
+        p[0] = p[1]
 
     def p_arg_str(self, p):
         """ arg : string"""
@@ -74,13 +84,18 @@ class Grammar:
         """ expr : '(' num ')'"""
         p[0] = p[2]
 
-    def p_expr3(self, p):
-        """ expr : '(' num ')'"""
-        p[0] = p[2]
-
+    """
     # Método com mensagens de controlo de erros inesperados
     def p_error(self, p):
         if p:
             raise Exception(f"Error: Unexpected token '{p.type}'")
         else:
             raise Exception("Error: Expecting token")
+    """
+    def p_error(self, p):
+        if p:
+            print(f"Syntax error: unexpected '{p.type}'")
+        else:
+            print("Syntax error: unexpected end of file")
+        exit(1)
+        

@@ -4,8 +4,9 @@ import ply.lex as plex
 class Lexer:
     start_end = ("start", "end")
     operators = ("ESCREVER", "PRINT")
+    variaveis = ("VAR", "VARS")
 
-    keywords = start_end + operators
+    keywords = start_end + operators + variaveis
 
     tokens = keywords + ("var", "string", "assign", "num", "comment")
 
@@ -30,7 +31,7 @@ class Lexer:
         t.value = float(t.value)
         return t
 
-    # Método com expressão regular capaz de ler o sinal de atruibuição de valores a variaveis em Portugol
+    # Método com expressão regular capaz de ler o sinal de atruibuição de valores a variaveis em
     def t_assign(self, t):
         r""":"""
         return t
