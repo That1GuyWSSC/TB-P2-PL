@@ -30,7 +30,7 @@ class Lexer:
         t.value = float(t.value)
         return t
 
-    # Método com expressão regular capaz de ler o sinal de atruibuição de valores a variaveis 
+    # Método com expressão regular capaz de ler o sinal de atruibuição de valores a variaveis em Portugol
     def t_assign(self, t):
         r""":"""
         return t
@@ -52,7 +52,8 @@ class Lexer:
 
     # Método de execução do lexer no documento
     def token(self):
-        return self.lex.token()
+        t = self.lex.token()
+        return t if t is None else t.type
 
     def input(self, string):
         self.lex.input(string)

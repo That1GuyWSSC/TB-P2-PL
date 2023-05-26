@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = "ESCREVER PRINT assign comment end num start string var program : start command end command : ESCREVER args args : args ',' arg args : arg arg : string"
+_lr_signature = "left+-left*/ESCREVER PRINT assign comment end num start string var program : start commands end commands : commands command ';' commands : command ';' command : ESCREVER args args : args ',' arg args : arg arg : string arg : expr expr : expr '+' expr\n                 | expr '-' expr\n                 | expr '*' expr\n                 | expr '/' expr expr : num expr : '(' num ')'"
     
-_lr_action_items = {'start':([0,],[2,]),'$end':([1,5,],[0,-1,]),'ESCREVER':([2,],[4,]),'end':([3,6,7,8,10,],[5,-2,-4,-5,-3,]),'string':([4,9,],[8,8,]),',':([6,7,8,10,],[9,-4,-5,-3,]),}
+_lr_action_items = {'start':([0,],[2,]),'$end':([1,6,],[0,-1,]),'ESCREVER':([2,3,8,15,],[5,5,-3,-2,]),'end':([3,8,15,],[6,-3,-2,]),';':([4,7,9,10,11,12,13,22,23,24,25,26,27,],[8,15,-4,-6,-7,-8,-13,-5,-9,-10,-11,-12,-14,]),'string':([5,16,],[11,11,]),'num':([5,14,16,17,18,19,20,],[13,21,13,13,13,13,13,]),'(':([5,16,17,18,19,20,],[14,14,14,14,14,14,]),',':([9,10,11,12,13,22,23,24,25,26,27,],[16,-6,-7,-8,-13,-5,-9,-10,-11,-12,-14,]),'+':([12,13,23,24,25,26,27,],[17,-13,-9,-10,-11,-12,-14,]),'-':([12,13,23,24,25,26,27,],[18,-13,-9,-10,-11,-12,-14,]),'*':([12,13,23,24,25,26,27,],[19,-13,19,19,-11,-12,-14,]),'/':([12,13,23,24,25,26,27,],[20,-13,20,20,-11,-12,-14,]),')':([21,],[27,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'program':([0,],[1,]),'command':([2,],[3,]),'args':([4,],[6,]),'arg':([4,9,],[7,10,]),}
+_lr_goto_items = {'program':([0,],[1,]),'commands':([2,],[3,]),'command':([2,3,],[4,7,]),'args':([5,],[9,]),'arg':([5,16,],[10,22,]),'expr':([5,16,17,18,19,20,],[12,12,23,24,25,26,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,9 +27,18 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> program","S'",1,None,None,None),
-  ('program -> start command end','program',3,'p_program','grammar.py',27),
-  ('command -> ESCREVER args','command',2,'p_command','grammar.py',31),
-  ('args -> args , arg','args',3,'p_args','grammar.py',38),
-  ('args -> arg','args',1,'p_args2','grammar.py',42),
-  ('arg -> string','arg',1,'p_arg','grammar.py',46),
+  ('program -> start commands end','program',3,'p_program','grammar.py',28),
+  ('commands -> commands command ;','commands',3,'p_commands','grammar.py',32),
+  ('commands -> command ;','commands',2,'p_commands2','grammar.py',36),
+  ('command -> ESCREVER args','command',2,'p_command','grammar.py',40),
+  ('args -> args , arg','args',3,'p_args','grammar.py',47),
+  ('args -> arg','args',1,'p_args2','grammar.py',51),
+  ('arg -> string','arg',1,'p_arg_str','grammar.py',55),
+  ('arg -> expr','arg',1,'p_arg_expr','grammar.py',59),
+  ('expr -> expr + expr','expr',3,'p_expr','grammar.py',63),
+  ('expr -> expr - expr','expr',3,'p_expr','grammar.py',64),
+  ('expr -> expr * expr','expr',3,'p_expr','grammar.py',65),
+  ('expr -> expr / expr','expr',3,'p_expr','grammar.py',66),
+  ('expr -> num','expr',1,'p_expr2','grammar.py',70),
+  ('expr -> ( num )','expr',3,'p_expr3','grammar.py',74),
 ]
