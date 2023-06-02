@@ -36,18 +36,37 @@ class Grammar:
         """ commands : command ';'"""
         p[0] = [p[1]]
 
-    def p_command(self, p):
+    def p_command_escrever(self, p):
         """ command : ESCREVER args"""
         p[0] = {
             "operator": "escrever",
             "args": p[2]
         }
-    def p_command2(self, p):
-        """ command : VAR var assign args """
-        p[0] = {
-                "operator" : "assign",
-                "args" : [p[2], p[4]]
-        }    
+    def p_command_assign(self, p):
+        """ command : VAR var_list """
+        p[0] = {"operator" : "declare", "args": p[2]}
+
+    def p_command_assign_2(self, p):
+        """ command : var assign arg """
+        p[0] = {"operator" : "assign", "args" : [p[3]], "data": p[1]}
+
+    def p_var_list(self, p):
+        """ var_list : var
+                     | var_list ',' var"""
+        if len(p) == 2:
+            p[0] = [{"operator" : "assign_declare", "args": [None], "data": p[1]}]
+        else:
+            p[0] = p[1]
+            p[0].append({"operator" : "assign_declare", "args": [None], "data": p[3]})
+
+    def p_var_list_2(self, p):
+        """ var_list : var assign arg
+                     | var_list ',' var assign arg """
+        if len(p) == 4:
+            p[0] = [{"operator" : "assign_declare", "args" : [p[3]], "data": p[1]}]
+        else:
+            p[0] = p[1]
+            p[0].append({"operator" : "assign_declare", "args" : [p[5]], "data": p[3]})
 
     def p_args(self, p):
         """ args : args ',' arg"""
@@ -56,10 +75,10 @@ class Grammar:
     def p_args2(self, p):
         """ args : arg"""
         p[0] = [p[1]]
-        
+
     def p_arg_var(self, p):
         """ arg : var """
-        p[0] = p[1]
+        p[0] = {"var": p[1]}
 
     def p_arg_str(self, p):
         """ arg : string"""
@@ -77,11 +96,12 @@ class Grammar:
         p[0] = {"operator": p[2], "args": [p[1], p[3]]}
 
     def p_expr2(self, p):
-        """ expr : num"""
+        """ expr : var
+                 | num """
         p[0] = p[1]
 
     def p_expr3(self, p):
-        """ expr : '(' num ')'"""
+        """ expr : '(' expr ')'"""
         p[0] = p[2]
 
     """
@@ -98,4 +118,3 @@ class Grammar:
         else:
             print("Syntax error: unexpected end of file")
         exit(1)
-        

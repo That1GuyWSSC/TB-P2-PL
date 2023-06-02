@@ -13,50 +13,57 @@ Rule 1     program -> start commands end
 Rule 2     commands -> commands command ;
 Rule 3     commands -> command ;
 Rule 4     command -> ESCREVER args
-Rule 5     command -> VAR var assign args
-Rule 6     args -> args , arg
-Rule 7     args -> arg
-Rule 8     arg -> var
-Rule 9     arg -> string
-Rule 10    arg -> expr
-Rule 11    expr -> expr + expr
-Rule 12    expr -> expr - expr
-Rule 13    expr -> expr * expr
-Rule 14    expr -> expr / expr
-Rule 15    expr -> num
-Rule 16    expr -> ( num )
+Rule 5     command -> VAR var_list
+Rule 6     command -> var assign arg
+Rule 7     var_list -> var
+Rule 8     var_list -> var_list , var
+Rule 9     var_list -> var assign arg
+Rule 10    var_list -> var_list , var assign arg
+Rule 11    args -> args , arg
+Rule 12    args -> arg
+Rule 13    arg -> var
+Rule 14    arg -> string
+Rule 15    arg -> expr
+Rule 16    expr -> expr + expr
+Rule 17    expr -> expr - expr
+Rule 18    expr -> expr * expr
+Rule 19    expr -> expr / expr
+Rule 20    expr -> var
+Rule 21    expr -> num
+Rule 22    expr -> ( expr )
 
 Terminals, with rules where they appear
 
-(                    : 16
-)                    : 16
-*                    : 13
-+                    : 11
-,                    : 6
--                    : 12
-/                    : 14
+(                    : 22
+)                    : 22
+*                    : 18
++                    : 16
+,                    : 8 10 11
+-                    : 17
+/                    : 19
 ;                    : 2 3
 ESCREVER             : 4
 PRINT                : 
 VAR                  : 5
 VARS                 : 
-assign               : 5
+assign               : 6 9 10
 comment              : 
 end                  : 1
 error                : 
-num                  : 15 16
+num                  : 21
 start                : 1
-string               : 9
-var                  : 5 8
+string               : 14
+var                  : 6 7 8 9 10 13 20
 
 Nonterminals, with rules where they appear
 
-arg                  : 6 7
-args                 : 4 5 6
+arg                  : 6 9 10 11 12
+args                 : 4 11
 command              : 2 3
 commands             : 1 2
-expr                 : 10 11 11 12 12 13 13 14 14
+expr                 : 15 16 16 17 17 18 18 19 19 22
 program              : 0
+var_list             : 5 8 10
 
 Parsing method: LALR
 
@@ -81,10 +88,12 @@ state 2
     (2) commands -> . commands command ;
     (3) commands -> . command ;
     (4) command -> . ESCREVER args
-    (5) command -> . VAR var assign args
+    (5) command -> . VAR var_list
+    (6) command -> . var assign arg
 
     ESCREVER        shift and go to state 5
     VAR             shift and go to state 6
+    var             shift and go to state 7
 
     commands                       shift and go to state 3
     command                        shift and go to state 4
@@ -94,380 +103,545 @@ state 3
     (1) program -> start commands . end
     (2) commands -> commands . command ;
     (4) command -> . ESCREVER args
-    (5) command -> . VAR var assign args
+    (5) command -> . VAR var_list
+    (6) command -> . var assign arg
 
-    end             shift and go to state 7
+    end             shift and go to state 8
     ESCREVER        shift and go to state 5
     VAR             shift and go to state 6
+    var             shift and go to state 7
 
-    command                        shift and go to state 8
+    command                        shift and go to state 9
 
 state 4
 
     (3) commands -> command . ;
 
-    ;               shift and go to state 9
+    ;               shift and go to state 10
 
 
 state 5
 
     (4) command -> ESCREVER . args
-    (6) args -> . args , arg
-    (7) args -> . arg
-    (8) arg -> . var
-    (9) arg -> . string
-    (10) arg -> . expr
-    (11) expr -> . expr + expr
-    (12) expr -> . expr - expr
-    (13) expr -> . expr * expr
-    (14) expr -> . expr / expr
-    (15) expr -> . num
-    (16) expr -> . ( num )
+    (11) args -> . args , arg
+    (12) args -> . arg
+    (13) arg -> . var
+    (14) arg -> . string
+    (15) arg -> . expr
+    (16) expr -> . expr + expr
+    (17) expr -> . expr - expr
+    (18) expr -> . expr * expr
+    (19) expr -> . expr / expr
+    (20) expr -> . var
+    (21) expr -> . num
+    (22) expr -> . ( expr )
 
-    var             shift and go to state 12
-    string          shift and go to state 13
-    num             shift and go to state 15
-    (               shift and go to state 16
+    var             shift and go to state 13
+    string          shift and go to state 14
+    num             shift and go to state 16
+    (               shift and go to state 17
 
-    args                           shift and go to state 10
-    arg                            shift and go to state 11
-    expr                           shift and go to state 14
+    args                           shift and go to state 11
+    arg                            shift and go to state 12
+    expr                           shift and go to state 15
 
 state 6
 
-    (5) command -> VAR . var assign args
+    (5) command -> VAR . var_list
+    (7) var_list -> . var
+    (8) var_list -> . var_list , var
+    (9) var_list -> . var assign arg
+    (10) var_list -> . var_list , var assign arg
 
-    var             shift and go to state 17
+    var             shift and go to state 19
 
+    var_list                       shift and go to state 18
 
 state 7
+
+    (6) command -> var . assign arg
+
+    assign          shift and go to state 20
+
+
+state 8
 
     (1) program -> start commands end .
 
     $end            reduce using rule 1 (program -> start commands end .)
 
 
-state 8
+state 9
 
     (2) commands -> commands command . ;
 
-    ;               shift and go to state 18
+    ;               shift and go to state 21
 
 
-state 9
+state 10
 
     (3) commands -> command ; .
 
     end             reduce using rule 3 (commands -> command ; .)
     ESCREVER        reduce using rule 3 (commands -> command ; .)
     VAR             reduce using rule 3 (commands -> command ; .)
-
-
-state 10
-
-    (4) command -> ESCREVER args .
-    (6) args -> args . , arg
-
-    ;               reduce using rule 4 (command -> ESCREVER args .)
-    ,               shift and go to state 19
+    var             reduce using rule 3 (commands -> command ; .)
 
 
 state 11
 
-    (7) args -> arg .
+    (4) command -> ESCREVER args .
+    (11) args -> args . , arg
 
-    ,               reduce using rule 7 (args -> arg .)
-    ;               reduce using rule 7 (args -> arg .)
+    ;               reduce using rule 4 (command -> ESCREVER args .)
+    ,               shift and go to state 22
 
 
 state 12
 
-    (8) arg -> var .
+    (12) args -> arg .
 
-    ,               reduce using rule 8 (arg -> var .)
-    ;               reduce using rule 8 (arg -> var .)
+    ,               reduce using rule 12 (args -> arg .)
+    ;               reduce using rule 12 (args -> arg .)
 
 
 state 13
 
-    (9) arg -> string .
+    (13) arg -> var .
+    (20) expr -> var .
 
-    ,               reduce using rule 9 (arg -> string .)
-    ;               reduce using rule 9 (arg -> string .)
+  ! reduce/reduce conflict for , resolved using rule 13 (arg -> var .)
+  ! reduce/reduce conflict for ; resolved using rule 13 (arg -> var .)
+    ,               reduce using rule 13 (arg -> var .)
+    ;               reduce using rule 13 (arg -> var .)
+    +               reduce using rule 20 (expr -> var .)
+    -               reduce using rule 20 (expr -> var .)
+    *               reduce using rule 20 (expr -> var .)
+    /               reduce using rule 20 (expr -> var .)
+
+  ! ,               [ reduce using rule 20 (expr -> var .) ]
+  ! ;               [ reduce using rule 20 (expr -> var .) ]
 
 
 state 14
 
-    (10) arg -> expr .
-    (11) expr -> expr . + expr
-    (12) expr -> expr . - expr
-    (13) expr -> expr . * expr
-    (14) expr -> expr . / expr
+    (14) arg -> string .
 
-    ,               reduce using rule 10 (arg -> expr .)
-    ;               reduce using rule 10 (arg -> expr .)
-    +               shift and go to state 20
-    -               shift and go to state 21
-    *               shift and go to state 22
-    /               shift and go to state 23
+    ,               reduce using rule 14 (arg -> string .)
+    ;               reduce using rule 14 (arg -> string .)
 
 
 state 15
 
-    (15) expr -> num .
+    (15) arg -> expr .
+    (16) expr -> expr . + expr
+    (17) expr -> expr . - expr
+    (18) expr -> expr . * expr
+    (19) expr -> expr . / expr
 
-    +               reduce using rule 15 (expr -> num .)
-    -               reduce using rule 15 (expr -> num .)
-    *               reduce using rule 15 (expr -> num .)
-    /               reduce using rule 15 (expr -> num .)
-    ,               reduce using rule 15 (expr -> num .)
-    ;               reduce using rule 15 (expr -> num .)
+    ,               reduce using rule 15 (arg -> expr .)
+    ;               reduce using rule 15 (arg -> expr .)
+    +               shift and go to state 23
+    -               shift and go to state 24
+    *               shift and go to state 25
+    /               shift and go to state 26
 
 
 state 16
 
-    (16) expr -> ( . num )
+    (21) expr -> num .
 
-    num             shift and go to state 24
+    +               reduce using rule 21 (expr -> num .)
+    -               reduce using rule 21 (expr -> num .)
+    *               reduce using rule 21 (expr -> num .)
+    /               reduce using rule 21 (expr -> num .)
+    ,               reduce using rule 21 (expr -> num .)
+    ;               reduce using rule 21 (expr -> num .)
+    )               reduce using rule 21 (expr -> num .)
 
 
 state 17
 
-    (5) command -> VAR var . assign args
+    (22) expr -> ( . expr )
+    (16) expr -> . expr + expr
+    (17) expr -> . expr - expr
+    (18) expr -> . expr * expr
+    (19) expr -> . expr / expr
+    (20) expr -> . var
+    (21) expr -> . num
+    (22) expr -> . ( expr )
 
-    assign          shift and go to state 25
+    var             shift and go to state 28
+    num             shift and go to state 16
+    (               shift and go to state 17
 
+    expr                           shift and go to state 27
 
 state 18
+
+    (5) command -> VAR var_list .
+    (8) var_list -> var_list . , var
+    (10) var_list -> var_list . , var assign arg
+
+    ;               reduce using rule 5 (command -> VAR var_list .)
+    ,               shift and go to state 29
+
+
+state 19
+
+    (7) var_list -> var .
+    (9) var_list -> var . assign arg
+
+    ,               reduce using rule 7 (var_list -> var .)
+    ;               reduce using rule 7 (var_list -> var .)
+    assign          shift and go to state 30
+
+
+state 20
+
+    (6) command -> var assign . arg
+    (13) arg -> . var
+    (14) arg -> . string
+    (15) arg -> . expr
+    (16) expr -> . expr + expr
+    (17) expr -> . expr - expr
+    (18) expr -> . expr * expr
+    (19) expr -> . expr / expr
+    (20) expr -> . var
+    (21) expr -> . num
+    (22) expr -> . ( expr )
+
+    var             shift and go to state 13
+    string          shift and go to state 14
+    num             shift and go to state 16
+    (               shift and go to state 17
+
+    arg                            shift and go to state 31
+    expr                           shift and go to state 15
+
+state 21
 
     (2) commands -> commands command ; .
 
     end             reduce using rule 2 (commands -> commands command ; .)
     ESCREVER        reduce using rule 2 (commands -> commands command ; .)
     VAR             reduce using rule 2 (commands -> commands command ; .)
+    var             reduce using rule 2 (commands -> commands command ; .)
 
-
-state 19
-
-    (6) args -> args , . arg
-    (8) arg -> . var
-    (9) arg -> . string
-    (10) arg -> . expr
-    (11) expr -> . expr + expr
-    (12) expr -> . expr - expr
-    (13) expr -> . expr * expr
-    (14) expr -> . expr / expr
-    (15) expr -> . num
-    (16) expr -> . ( num )
-
-    var             shift and go to state 12
-    string          shift and go to state 13
-    num             shift and go to state 15
-    (               shift and go to state 16
-
-    arg                            shift and go to state 26
-    expr                           shift and go to state 14
-
-state 20
-
-    (11) expr -> expr + . expr
-    (11) expr -> . expr + expr
-    (12) expr -> . expr - expr
-    (13) expr -> . expr * expr
-    (14) expr -> . expr / expr
-    (15) expr -> . num
-    (16) expr -> . ( num )
-
-    num             shift and go to state 15
-    (               shift and go to state 16
-
-    expr                           shift and go to state 27
-
-state 21
-
-    (12) expr -> expr - . expr
-    (11) expr -> . expr + expr
-    (12) expr -> . expr - expr
-    (13) expr -> . expr * expr
-    (14) expr -> . expr / expr
-    (15) expr -> . num
-    (16) expr -> . ( num )
-
-    num             shift and go to state 15
-    (               shift and go to state 16
-
-    expr                           shift and go to state 28
 
 state 22
 
-    (13) expr -> expr * . expr
-    (11) expr -> . expr + expr
-    (12) expr -> . expr - expr
-    (13) expr -> . expr * expr
-    (14) expr -> . expr / expr
-    (15) expr -> . num
-    (16) expr -> . ( num )
+    (11) args -> args , . arg
+    (13) arg -> . var
+    (14) arg -> . string
+    (15) arg -> . expr
+    (16) expr -> . expr + expr
+    (17) expr -> . expr - expr
+    (18) expr -> . expr * expr
+    (19) expr -> . expr / expr
+    (20) expr -> . var
+    (21) expr -> . num
+    (22) expr -> . ( expr )
 
-    num             shift and go to state 15
-    (               shift and go to state 16
+    var             shift and go to state 13
+    string          shift and go to state 14
+    num             shift and go to state 16
+    (               shift and go to state 17
 
-    expr                           shift and go to state 29
+    arg                            shift and go to state 32
+    expr                           shift and go to state 15
 
 state 23
 
-    (14) expr -> expr / . expr
-    (11) expr -> . expr + expr
-    (12) expr -> . expr - expr
-    (13) expr -> . expr * expr
-    (14) expr -> . expr / expr
-    (15) expr -> . num
-    (16) expr -> . ( num )
+    (16) expr -> expr + . expr
+    (16) expr -> . expr + expr
+    (17) expr -> . expr - expr
+    (18) expr -> . expr * expr
+    (19) expr -> . expr / expr
+    (20) expr -> . var
+    (21) expr -> . num
+    (22) expr -> . ( expr )
 
-    num             shift and go to state 15
-    (               shift and go to state 16
+    var             shift and go to state 28
+    num             shift and go to state 16
+    (               shift and go to state 17
 
-    expr                           shift and go to state 30
+    expr                           shift and go to state 33
 
 state 24
 
-    (16) expr -> ( num . )
+    (17) expr -> expr - . expr
+    (16) expr -> . expr + expr
+    (17) expr -> . expr - expr
+    (18) expr -> . expr * expr
+    (19) expr -> . expr / expr
+    (20) expr -> . var
+    (21) expr -> . num
+    (22) expr -> . ( expr )
 
-    )               shift and go to state 31
+    var             shift and go to state 28
+    num             shift and go to state 16
+    (               shift and go to state 17
 
+    expr                           shift and go to state 34
 
 state 25
 
-    (5) command -> VAR var assign . args
-    (6) args -> . args , arg
-    (7) args -> . arg
-    (8) arg -> . var
-    (9) arg -> . string
-    (10) arg -> . expr
-    (11) expr -> . expr + expr
-    (12) expr -> . expr - expr
-    (13) expr -> . expr * expr
-    (14) expr -> . expr / expr
-    (15) expr -> . num
-    (16) expr -> . ( num )
+    (18) expr -> expr * . expr
+    (16) expr -> . expr + expr
+    (17) expr -> . expr - expr
+    (18) expr -> . expr * expr
+    (19) expr -> . expr / expr
+    (20) expr -> . var
+    (21) expr -> . num
+    (22) expr -> . ( expr )
 
-    var             shift and go to state 12
-    string          shift and go to state 13
-    num             shift and go to state 15
-    (               shift and go to state 16
+    var             shift and go to state 28
+    num             shift and go to state 16
+    (               shift and go to state 17
 
-    args                           shift and go to state 32
-    arg                            shift and go to state 11
-    expr                           shift and go to state 14
+    expr                           shift and go to state 35
 
 state 26
 
-    (6) args -> args , arg .
+    (19) expr -> expr / . expr
+    (16) expr -> . expr + expr
+    (17) expr -> . expr - expr
+    (18) expr -> . expr * expr
+    (19) expr -> . expr / expr
+    (20) expr -> . var
+    (21) expr -> . num
+    (22) expr -> . ( expr )
 
-    ,               reduce using rule 6 (args -> args , arg .)
-    ;               reduce using rule 6 (args -> args , arg .)
+    var             shift and go to state 28
+    num             shift and go to state 16
+    (               shift and go to state 17
 
+    expr                           shift and go to state 36
 
 state 27
 
-    (11) expr -> expr + expr .
-    (11) expr -> expr . + expr
-    (12) expr -> expr . - expr
-    (13) expr -> expr . * expr
-    (14) expr -> expr . / expr
+    (22) expr -> ( expr . )
+    (16) expr -> expr . + expr
+    (17) expr -> expr . - expr
+    (18) expr -> expr . * expr
+    (19) expr -> expr . / expr
 
-    +               reduce using rule 11 (expr -> expr + expr .)
-    -               reduce using rule 11 (expr -> expr + expr .)
-    ,               reduce using rule 11 (expr -> expr + expr .)
-    ;               reduce using rule 11 (expr -> expr + expr .)
-    *               shift and go to state 22
-    /               shift and go to state 23
-
-  ! *               [ reduce using rule 11 (expr -> expr + expr .) ]
-  ! /               [ reduce using rule 11 (expr -> expr + expr .) ]
-  ! +               [ shift and go to state 20 ]
-  ! -               [ shift and go to state 21 ]
+    )               shift and go to state 37
+    +               shift and go to state 23
+    -               shift and go to state 24
+    *               shift and go to state 25
+    /               shift and go to state 26
 
 
 state 28
 
-    (12) expr -> expr - expr .
-    (11) expr -> expr . + expr
-    (12) expr -> expr . - expr
-    (13) expr -> expr . * expr
-    (14) expr -> expr . / expr
+    (20) expr -> var .
 
-    +               reduce using rule 12 (expr -> expr - expr .)
-    -               reduce using rule 12 (expr -> expr - expr .)
-    ,               reduce using rule 12 (expr -> expr - expr .)
-    ;               reduce using rule 12 (expr -> expr - expr .)
-    *               shift and go to state 22
-    /               shift and go to state 23
-
-  ! *               [ reduce using rule 12 (expr -> expr - expr .) ]
-  ! /               [ reduce using rule 12 (expr -> expr - expr .) ]
-  ! +               [ shift and go to state 20 ]
-  ! -               [ shift and go to state 21 ]
+    )               reduce using rule 20 (expr -> var .)
+    +               reduce using rule 20 (expr -> var .)
+    -               reduce using rule 20 (expr -> var .)
+    *               reduce using rule 20 (expr -> var .)
+    /               reduce using rule 20 (expr -> var .)
+    ,               reduce using rule 20 (expr -> var .)
+    ;               reduce using rule 20 (expr -> var .)
 
 
 state 29
 
-    (13) expr -> expr * expr .
-    (11) expr -> expr . + expr
-    (12) expr -> expr . - expr
-    (13) expr -> expr . * expr
-    (14) expr -> expr . / expr
+    (8) var_list -> var_list , . var
+    (10) var_list -> var_list , . var assign arg
 
-    +               reduce using rule 13 (expr -> expr * expr .)
-    -               reduce using rule 13 (expr -> expr * expr .)
-    *               reduce using rule 13 (expr -> expr * expr .)
-    /               reduce using rule 13 (expr -> expr * expr .)
-    ,               reduce using rule 13 (expr -> expr * expr .)
-    ;               reduce using rule 13 (expr -> expr * expr .)
-
-  ! +               [ shift and go to state 20 ]
-  ! -               [ shift and go to state 21 ]
-  ! *               [ shift and go to state 22 ]
-  ! /               [ shift and go to state 23 ]
+    var             shift and go to state 38
 
 
 state 30
 
-    (14) expr -> expr / expr .
-    (11) expr -> expr . + expr
-    (12) expr -> expr . - expr
-    (13) expr -> expr . * expr
-    (14) expr -> expr . / expr
+    (9) var_list -> var assign . arg
+    (13) arg -> . var
+    (14) arg -> . string
+    (15) arg -> . expr
+    (16) expr -> . expr + expr
+    (17) expr -> . expr - expr
+    (18) expr -> . expr * expr
+    (19) expr -> . expr / expr
+    (20) expr -> . var
+    (21) expr -> . num
+    (22) expr -> . ( expr )
 
-    +               reduce using rule 14 (expr -> expr / expr .)
-    -               reduce using rule 14 (expr -> expr / expr .)
-    *               reduce using rule 14 (expr -> expr / expr .)
-    /               reduce using rule 14 (expr -> expr / expr .)
-    ,               reduce using rule 14 (expr -> expr / expr .)
-    ;               reduce using rule 14 (expr -> expr / expr .)
+    var             shift and go to state 13
+    string          shift and go to state 14
+    num             shift and go to state 16
+    (               shift and go to state 17
 
-  ! +               [ shift and go to state 20 ]
-  ! -               [ shift and go to state 21 ]
-  ! *               [ shift and go to state 22 ]
-  ! /               [ shift and go to state 23 ]
-
+    arg                            shift and go to state 39
+    expr                           shift and go to state 15
 
 state 31
 
-    (16) expr -> ( num ) .
+    (6) command -> var assign arg .
 
-    +               reduce using rule 16 (expr -> ( num ) .)
-    -               reduce using rule 16 (expr -> ( num ) .)
-    *               reduce using rule 16 (expr -> ( num ) .)
-    /               reduce using rule 16 (expr -> ( num ) .)
-    ,               reduce using rule 16 (expr -> ( num ) .)
-    ;               reduce using rule 16 (expr -> ( num ) .)
+    ;               reduce using rule 6 (command -> var assign arg .)
 
 
 state 32
 
-    (5) command -> VAR var assign args .
-    (6) args -> args . , arg
+    (11) args -> args , arg .
 
-    ;               reduce using rule 5 (command -> VAR var assign args .)
-    ,               shift and go to state 19
+    ,               reduce using rule 11 (args -> args , arg .)
+    ;               reduce using rule 11 (args -> args , arg .)
 
+
+state 33
+
+    (16) expr -> expr + expr .
+    (16) expr -> expr . + expr
+    (17) expr -> expr . - expr
+    (18) expr -> expr . * expr
+    (19) expr -> expr . / expr
+
+    +               reduce using rule 16 (expr -> expr + expr .)
+    -               reduce using rule 16 (expr -> expr + expr .)
+    ,               reduce using rule 16 (expr -> expr + expr .)
+    ;               reduce using rule 16 (expr -> expr + expr .)
+    )               reduce using rule 16 (expr -> expr + expr .)
+    *               shift and go to state 25
+    /               shift and go to state 26
+
+  ! *               [ reduce using rule 16 (expr -> expr + expr .) ]
+  ! /               [ reduce using rule 16 (expr -> expr + expr .) ]
+  ! +               [ shift and go to state 23 ]
+  ! -               [ shift and go to state 24 ]
+
+
+state 34
+
+    (17) expr -> expr - expr .
+    (16) expr -> expr . + expr
+    (17) expr -> expr . - expr
+    (18) expr -> expr . * expr
+    (19) expr -> expr . / expr
+
+    +               reduce using rule 17 (expr -> expr - expr .)
+    -               reduce using rule 17 (expr -> expr - expr .)
+    ,               reduce using rule 17 (expr -> expr - expr .)
+    ;               reduce using rule 17 (expr -> expr - expr .)
+    )               reduce using rule 17 (expr -> expr - expr .)
+    *               shift and go to state 25
+    /               shift and go to state 26
+
+  ! *               [ reduce using rule 17 (expr -> expr - expr .) ]
+  ! /               [ reduce using rule 17 (expr -> expr - expr .) ]
+  ! +               [ shift and go to state 23 ]
+  ! -               [ shift and go to state 24 ]
+
+
+state 35
+
+    (18) expr -> expr * expr .
+    (16) expr -> expr . + expr
+    (17) expr -> expr . - expr
+    (18) expr -> expr . * expr
+    (19) expr -> expr . / expr
+
+    +               reduce using rule 18 (expr -> expr * expr .)
+    -               reduce using rule 18 (expr -> expr * expr .)
+    *               reduce using rule 18 (expr -> expr * expr .)
+    /               reduce using rule 18 (expr -> expr * expr .)
+    ,               reduce using rule 18 (expr -> expr * expr .)
+    ;               reduce using rule 18 (expr -> expr * expr .)
+    )               reduce using rule 18 (expr -> expr * expr .)
+
+  ! +               [ shift and go to state 23 ]
+  ! -               [ shift and go to state 24 ]
+  ! *               [ shift and go to state 25 ]
+  ! /               [ shift and go to state 26 ]
+
+
+state 36
+
+    (19) expr -> expr / expr .
+    (16) expr -> expr . + expr
+    (17) expr -> expr . - expr
+    (18) expr -> expr . * expr
+    (19) expr -> expr . / expr
+
+    +               reduce using rule 19 (expr -> expr / expr .)
+    -               reduce using rule 19 (expr -> expr / expr .)
+    *               reduce using rule 19 (expr -> expr / expr .)
+    /               reduce using rule 19 (expr -> expr / expr .)
+    ,               reduce using rule 19 (expr -> expr / expr .)
+    ;               reduce using rule 19 (expr -> expr / expr .)
+    )               reduce using rule 19 (expr -> expr / expr .)
+
+  ! +               [ shift and go to state 23 ]
+  ! -               [ shift and go to state 24 ]
+  ! *               [ shift and go to state 25 ]
+  ! /               [ shift and go to state 26 ]
+
+
+state 37
+
+    (22) expr -> ( expr ) .
+
+    +               reduce using rule 22 (expr -> ( expr ) .)
+    -               reduce using rule 22 (expr -> ( expr ) .)
+    *               reduce using rule 22 (expr -> ( expr ) .)
+    /               reduce using rule 22 (expr -> ( expr ) .)
+    ,               reduce using rule 22 (expr -> ( expr ) .)
+    ;               reduce using rule 22 (expr -> ( expr ) .)
+    )               reduce using rule 22 (expr -> ( expr ) .)
+
+
+state 38
+
+    (8) var_list -> var_list , var .
+    (10) var_list -> var_list , var . assign arg
+
+    ,               reduce using rule 8 (var_list -> var_list , var .)
+    ;               reduce using rule 8 (var_list -> var_list , var .)
+    assign          shift and go to state 40
+
+
+state 39
+
+    (9) var_list -> var assign arg .
+
+    ,               reduce using rule 9 (var_list -> var assign arg .)
+    ;               reduce using rule 9 (var_list -> var assign arg .)
+
+
+state 40
+
+    (10) var_list -> var_list , var assign . arg
+    (13) arg -> . var
+    (14) arg -> . string
+    (15) arg -> . expr
+    (16) expr -> . expr + expr
+    (17) expr -> . expr - expr
+    (18) expr -> . expr * expr
+    (19) expr -> . expr / expr
+    (20) expr -> . var
+    (21) expr -> . num
+    (22) expr -> . ( expr )
+
+    var             shift and go to state 13
+    string          shift and go to state 14
+    num             shift and go to state 16
+    (               shift and go to state 17
+
+    arg                            shift and go to state 41
+    expr                           shift and go to state 15
+
+state 41
+
+    (10) var_list -> var_list , var assign arg .
+
+    ,               reduce using rule 10 (var_list -> var_list , var assign arg .)
+    ;               reduce using rule 10 (var_list -> var_list , var assign arg .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: reduce/reduce conflict in state 13 resolved using rule (arg -> var)
+WARNING: rejected rule (expr -> var) in state 13
