@@ -5,8 +5,9 @@ class Lexer:
     start_end = ("start", "end")
     operators = ("ESCREVER", "PRINT")
     variaveis = ("VAR", "VARS")
+    ciclos = ("WHILE", "FOR")
 
-    keywords = start_end + operators + variaveis
+    keywords = start_end + operators + variaveis + ciclos
 
     tokens = keywords + ("var", "string", "assign", "num", "comment")
 

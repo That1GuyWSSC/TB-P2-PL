@@ -14,6 +14,11 @@ tmp : 7 + 3;
 a : 10 * (30 + tmp);
 b : tmp * (a + 10);
 ESCREVER "A: ", a, "B: ", b, "TMP: ", tmp;
+
+VAR nova : 10;
+
+WHILE nova < 20 :
+    nova : nova + 1;
 end
 """)
 

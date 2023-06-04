@@ -36,6 +36,14 @@ class Grammar:
         """ commands : command ';'"""
         p[0] = [p[1]]
 
+    def p_command_while(self,p):
+        """ while : WHILE var '<' num assign commands"""
+        p[0] = {
+            "operator": "assign",
+            "args": p[5],
+            "data": [p[1], p[3] , p[4]]
+        }
+        
     def p_command_escrever(self, p):
         """ command : ESCREVER args"""
         p[0] = {
@@ -104,14 +112,6 @@ class Grammar:
         """ expr : '(' expr ')'"""
         p[0] = p[2]
 
-    """
-    # Método com mensagens de controlo de erros inesperados
-    def p_error(self, p):
-        if p:
-            raise Exception(f"Error: Unexpected token '{p.type}'")
-        else:
-            raise Exception("Error: Expecting token")
-    """
     def p_error(self, p):
         if p:
             print(f"Syntax error: unexpected '{p.type}'")

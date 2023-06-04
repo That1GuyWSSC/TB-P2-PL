@@ -7,9 +7,12 @@ VAR nome : "ates";
 ESCREVER nome;
 VAR tmp, a, b;
 tmp : 7 + 3;
-ESCREVER "a : 10 * (30 + tmp)";
-a : 2;
+a : 10 * (30 + tmp);
 b : tmp * (a + 10);
-VAR c : tmp * a;
-ESCREVER "A: ", a, " B: ", b, " TMP: ", tmp, " C: ", c;
+ESCREVER "A: ", a, "B: ", b, "TMP: ", tmp;
+
+VAR nova : 10;
+
+WHILE nova < 20 :
+    nova : nova + 1;
 end
